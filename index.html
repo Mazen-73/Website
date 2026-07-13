@@ -1,0 +1,1383 @@
+<!doctype html>
+<html lang="en" class="dark" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mazen</title>
+  
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter & Cairo & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Cairo', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Material 3 CSS Variables matching React's index.css exactly */
+    :root {
+      --m3-primary: #006495;
+      --m3-on-primary: #ffffff;
+      --m3-primary-container: #cbe6ff;
+      --m3-on-primary-container: #001e30;
+      
+      --m3-secondary: #50606e;
+      --m3-on-secondary: #ffffff;
+      --m3-secondary-container: #d3e5f5;
+      --m3-on-secondary-container: #0c1d29;
+
+      --m3-tertiary: #655675;
+      --m3-on-tertiary: #ffffff;
+      --m3-tertiary-container: #ebdcff;
+      --m3-on-tertiary-container: #20132f;
+
+      --m3-surface: #fcfcff;
+      --m3-on-surface: #1a1c1e;
+      --m3-surface-variant: #e0e2ec;
+      --m3-on-surface-variant: #43474e;
+      --m3-outline: #73777f;
+      
+      --m3-surface-container: #f0f3f8;
+      --m3-surface-container-high: #e9ecf2;
+    }
+
+    :root.dark {
+      --m3-primary: #90cdff;
+      --m3-on-primary: #003350;
+      --m3-primary-container: #004b71;
+      --m3-on-primary-container: #cbe6ff;
+      
+      --m3-secondary: #b8c9d9;
+      --m3-on-secondary: #22323f;
+      --m3-secondary-container: #394856;
+      --m3-on-secondary-container: #d3e5f5;
+
+      --m3-tertiary: #cfbdfe;
+      --m3-on-tertiary: #362945;
+      --m3-tertiary-container: #4d3f5c;
+      --m3-on-tertiary-container: #ebdcff;
+
+      --m3-surface: #121418;
+      --m3-on-surface: #e2e2e5;
+      --m3-surface-variant: #43474e;
+      --m3-on-surface-variant: #c3c7d0;
+      --m3-outline: #8d9199;
+      
+      --m3-surface-container: #1d2024;
+      --m3-surface-container-high: #282a2f;
+    }
+
+    /* Core Styles and Smooth transitions */
+    body {
+      transition: background-color 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      background-color: var(--m3-surface);
+      color: var(--m3-on-surface);
+    }
+
+    /* Liquid Glass Backdrop Reflection Layer */
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 
+        0 10px 30px -10px rgba(0, 0, 0, 0.04),
+        0 1px 3px rgba(0, 0, 0, 0.02),
+        inset 0 1px 2px rgba(255, 255, 255, 0.8),
+        inset 0 -1px 1px rgba(0, 0, 0, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .liquid-glass::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.05) 40%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .dark .liquid-glass {
+      background: rgba(18, 22, 28, 0.65);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.45),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    /* Fluid sliding navigation indicator transitions */
+    #nav-indicator {
+      transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    }
+
+    /* Floating Expressive Material Blobs (Hardware Accelerated) */
+    @keyframes morph-blob-1 {
+      0%, 100% {
+        transform: scale(1) rotate(0deg) translate(0px, 0px);
+      }
+      25% {
+        transform: scale(1.08) rotate(90deg) translate(25px, -15px);
+      }
+      50% {
+        transform: scale(0.95) rotate(180deg) translate(-15px, 25px);
+      }
+      75% {
+        transform: scale(1.04) rotate(270deg) translate(8px, 8px);
+      }
+    }
+
+    @keyframes morph-blob-2 {
+      0%, 100% {
+        transform: scale(1) rotate(0deg) translate(0px, 0px);
+      }
+      33% {
+        transform: scale(0.95) rotate(-120deg) translate(-30px, 15px);
+      }
+      66% {
+        transform: scale(1.05) rotate(-240deg) translate(15px, -30px);
+      }
+    }
+
+    @keyframes morph-blob-3 {
+      0%, 100% {
+        transform: scale(1) rotate(0deg) translate(0px, 0px);
+      }
+      50% {
+        transform: scale(1.1) rotate(180deg) translate(20px, 20px);
+      }
+    }
+
+    .blob-1 {
+      animation: morph-blob-1 25s infinite ease-in-out;
+    }
+    .blob-2 {
+      animation: morph-blob-2 28s infinite ease-in-out;
+    }
+    .blob-3 {
+      animation: morph-blob-3 32s infinite ease-in-out;
+    }
+
+    /* Spring-like logo bounce */
+    @keyframes logo-spring {
+      0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+      15% {
+        transform: translateY(-35px) scale(1.25) rotate(15deg);
+      }
+      35% {
+        transform: translateY(10px) scale(0.9) rotate(-10deg);
+      }
+      55% {
+        transform: translateY(-10px) scale(1.05) rotate(5deg);
+      }
+      75% {
+        transform: translateY(5px) scale(0.98) rotate(-2deg);
+      }
+      100% {
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+    }
+    .logo-spring-active {
+      animation: logo-spring 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+    /* Custom hover styles for flat skill chips */
+    .skill-godot:hover { color: #478CBF !important; background-color: rgba(71, 140, 191, 0.08) !important; }
+    .skill-android:hover { color: #3DDC84 !important; background-color: rgba(61, 220, 132, 0.08) !important; }
+    .skill-html:hover { color: #E34F26 !important; background-color: rgba(227, 79, 38, 0.08) !important; }
+    .skill-css:hover { color: #1572B6 !important; background-color: rgba(21, 114, 182, 0.08) !important; }
+    .skill-js:hover { color: #F7DF1E !important; background-color: rgba(247, 223, 30, 0.08) !important; }
+    .skill-kotlin:hover { color: #7F52FF !important; background-color: rgba(127, 82, 255, 0.08) !important; }
+    .skill-python:hover { color: #3776AB !important; background-color: rgba(55, 118, 171, 0.08) !important; }
+
+    /* Material 3 Expressive Custom Spring Curves & Shapes */
+    .m3-spring {
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .m3-spring-fast {
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Tactile Press State */
+    .m3-press-active:active {
+      transform: scale(0.95);
+    }
+
+    /* Scroll Reveal Animations */
+    .reveal-item {
+      opacity: 0;
+      will-change: opacity, transform;
+      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .reveal-up {
+      transform: translateY(45px);
+    }
+
+    .reveal-down {
+      transform: translateY(-45px);
+    }
+
+    .reveal-scale {
+      transform: scale(0.93);
+    }
+
+    .reveal-left {
+      transform: translateX(-45px);
+    }
+
+    .reveal-right {
+      transform: translateX(45px);
+    }
+
+    /* Revealed States */
+    .reveal-item.revealed {
+      opacity: 1;
+      transform: translateY(0) translateX(0) scale(1);
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans transition-colors duration-500 overflow-x-hidden select-none bg-[var(--m3-surface)] text-[var(--m3-on-surface)]">
+
+  <!-- Background Morphing Blobs and Decorative Geometries -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <!-- Blob 1 -->
+    <div class="absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] bg-indigo-500/25 dark:bg-indigo-600/20 rounded-full blur-[130px] blob-1"></div>
+    
+    <!-- Blob 2 -->
+    <div class="absolute top-[30%] -right-[10%] w-[55vw] h-[55vw] bg-purple-500/20 dark:bg-purple-600/15 rounded-full blur-[130px] blob-2"></div>
+    
+    <!-- Blob 3 -->
+    <div class="absolute bottom-[-10%] left-[5%] w-[55vw] h-[55vw] bg-emerald-500/20 dark:bg-emerald-600/15 rounded-full blur-[140px] blob-3"></div>
+    
+    <!-- Floating Geometry Lines -->
+    <div class="absolute inset-0 opacity-15 dark:opacity-8">
+      <div class="absolute top-[20%] left-[15%] w-16 h-16 rounded-full border border-blue-500/30 animate-[pulse_8s_infinite]"></div>
+      <div class="absolute top-[60%] right-[20%] w-24 h-24 rounded-[32px] border border-purple-500/30 animate-[spin_20s_infinite_linear]"></div>
+      <div class="absolute bottom-[20%] left-[25%] w-12 h-24 rounded-full border border-pink-500/30"></div>
+    </div>
+  </div>
+
+  <!-- Liquid Glass Floating Header / Navbar -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 w-full px-2 sm:px-4 transition-all duration-500 py-4">
+    <div id="navbar-inner" class="max-w-6xl mx-auto rounded-full liquid-glass px-3 sm:px-6 py-2.5 sm:py-4 flex items-center justify-between transition-all duration-500 gap-2">
+      
+      <!-- Logo Brand -->
+      <a href="#home" class="flex items-center gap-1.5 sm:gap-2.5 cursor-pointer group transition-transform duration-300 hover:scale-105 shrink-0">
+        <span class="text-base sm:text-xl font-black tracking-tight text-[var(--m3-on-surface)]" data-t="brandName">MAZEN</span>
+      </a>
+
+      <!-- Navigation links (Visible on md and larger screens) -->
+      <div class="hidden md:flex items-center gap-2.5 sm:gap-6 md:gap-8 relative select-none">
+        <a href="#home" data-section="home" class="nav-link px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-bold transition-all duration-300 relative text-blue-600 dark:text-blue-300" data-t="navHome">Home</a>
+        <a href="#skills" data-section="skills" class="nav-link px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-bold transition-all duration-300 relative text-[var(--m3-on-surface-variant)]" data-t="navSkills">Skills</a>
+        <a href="#projects" data-section="projects" class="nav-link px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-bold transition-all duration-300 relative text-[var(--m3-on-surface-variant)]" data-t="navProjects">Projects</a>
+        <a href="#contact" data-section="contact" class="nav-link px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-bold transition-all duration-300 relative text-[var(--m3-on-surface-variant)]" data-t="navContact">Contact</a>
+        
+        <!-- Sliding active capsule background (Material 3 Expressive Style) -->
+        <div id="nav-indicator" class="absolute inset-y-1 rounded-full bg-blue-500/10 dark:bg-blue-400/15 -z-10" style="left: 0px; width: 0px;"></div>
+      </div>
+
+      <!-- Settings Controls Toggles -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        
+        <!-- Language button (Always visible) -->
+        <button id="lang-btn" class="hidden md:flex px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-black tracking-wider bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60 shadow-sm hover:scale-105 active:scale-95 transition-all text-neutral-900 dark:text-neutral-100 items-center justify-center cursor-pointer" aria-label="Toggle language">
+          <span id="lang-toggle-text">العربية</span>
+        </button>
+
+        <!-- Theme button (Always visible) -->
+        <button id="theme-btn" class="hidden md:flex p-2 sm:p-3 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60 shadow-sm hover:scale-105 active:scale-95 transition-all text-neutral-900 dark:text-neutral-100 items-center justify-center cursor-pointer" aria-label="Toggle theme">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 dark:hidden"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 hidden dark:block"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+
+        <!-- Mobile Menu Trigger Button (Visible on mobile only) -->
+        <button id="mobile-menu-btn" class="flex md:hidden p-2 sm:p-3 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60 shadow-sm hover:scale-105 active:scale-95 transition-all text-neutral-900 dark:text-neutral-100 items-center justify-center cursor-pointer" aria-label="Open menu" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 sm:w-4 sm:h-4"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer Backdrop & Container -->
+  <div id="mobile-drawer" class="fixed inset-0 z-50 pointer-events-none transition-all duration-300 opacity-0" role="dialog" aria-modal="true" aria-hidden="true">
+    <!-- Backdrop overlay -->
+    <div id="drawer-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm pointer-events-none transition-opacity duration-300 opacity-0"></div>
+    
+    <!-- Drawer Panel sliding -->
+    <div id="drawer-panel" class="absolute top-0 bottom-0 right-0 w-[80vw] max-w-[320px] bg-[var(--m3-surface-container)] p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 shadow-none" tabIndex="-1">
+      <div>
+        <div class="flex items-center justify-between mb-8">
+          <span class="text-xl font-black text-[var(--m3-on-surface)]" data-t="brandName">Mazen</span>
+          <button id="close-drawer-btn" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors" aria-label="Close menu">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <div class="flex flex-col gap-2">
+          <a href="#home" class="mobile-nav-link py-3 px-4 rounded-full text-base font-bold text-[var(--m3-on-surface-variant)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-t="navHome">Home</a>
+          <a href="#skills" class="mobile-nav-link py-3 px-4 rounded-full text-base font-bold text-[var(--m3-on-surface-variant)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-t="navSkills">Skills</a>
+          <a href="#projects" class="mobile-nav-link py-3 px-4 rounded-full text-base font-bold text-[var(--m3-on-surface-variant)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-t="navProjects">Projects</a>
+          <a href="#contact" class="mobile-nav-link py-3 px-4 rounded-full text-base font-bold text-[var(--m3-on-surface-variant)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors" data-t="navContact">Contact</a>
+        </div>
+      </div>
+      
+      <!-- Drawer Bottom controls -->
+      <div class="flex flex-col gap-4">
+        <div class="h-[1px] bg-black/5 dark:bg-white/10 w-full"></div>
+        
+        <div class="grid grid-cols-2 gap-3">
+          <button id="drawer-lang-btn" class="py-3.5 rounded-full text-xs font-black tracking-wider bg-[var(--m3-surface-container-high)] hover:opacity-90 transition-all text-[var(--m3-on-surface)] flex items-center justify-center">
+            <span id="drawer-lang-text">العربية</span>
+          </button>
+          
+          <button id="drawer-theme-btn" class="py-3.5 rounded-full text-xs font-black tracking-wider bg-[var(--m3-surface-container-high)] hover:opacity-90 transition-all text-[var(--m3-on-surface)] flex items-center justify-center">
+            <i data-lucide="sun" class="w-4 h-4 text-amber-500 dark:hidden"></i>
+            <i data-lucide="moon" class="w-4 h-4 text-blue-400 hidden dark:block"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Showcase Body Content -->
+  <main class="relative z-10 max-w-6xl mx-auto px-4 md:px-8 pt-24">
+    
+    <!-- Hero / Homepage Landing Section -->
+    <section id="home" class="min-h-[80vh] flex flex-col items-center justify-center text-center py-16 md:py-24 relative overflow-hidden rounded-[48px] md:rounded-[64px] bg-gradient-to-b from-indigo-500/5 via-transparent to-transparent dark:from-indigo-500/2 dark:via-transparent dark:to-transparent px-4 md:px-8">
+      
+      <!-- Wallpaper Subtle Technical Grid Pattern & Vignette overlay -->
+      <div class="absolute inset-0 pointer-events-none select-none opacity-[0.35] dark:opacity-[0.5] z-0" 
+        style="
+          background-image: radial-gradient(circle, rgba(99, 102, 241, 0.2) 1.5px, transparent 1.5px);
+          background-size: 24px 24px;
+          mask-image: radial-gradient(circle, black 30%, transparent 90%);
+          -webkit-mask-image: radial-gradient(circle, black 30%, transparent 90%);
+        "> 
+      </div>
+
+      <div class="relative z-10 flex flex-col items-center">
+        <!-- Logo Box with Interactive bounce & spring behavior -->
+        <div id="hero-logo-box" class="mb-8 relative cursor-pointer group transition-transform duration-300 hover:scale-105 reveal-item reveal-scale">
+          <!-- Pulsing Background Glow Aura -->
+          <div class="absolute inset-0 bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-600 rounded-full blur-2xl opacity-40 group-hover:opacity-75 transition-all duration-500 scale-110"></div>
+          
+          <!-- Material 3 Expressive Device Controller Logo (BACKGROUND REMOVED) -->
+          <div class="relative w-36 h-36 md:w-44 md:h-44 flex items-center justify-center overflow-hidden">
+            <img 
+              src="assets/logo.png" 
+              alt="Mazen Logo" 
+              class="w-full h-full object-contain select-none bg-transparent"
+              onerror="this.onerror=null; this.src='logo.png';"
+            />
+          </div>
+        </div>
+
+        <!-- Typography Heading -->
+        <div class="space-y-4 max-w-3xl reveal-item reveal-up" style="transition-delay: 0.15s;">
+          <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-[var(--m3-on-surface)] leading-none">
+            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-400" data-t="heroGreeting">
+              Hi, I am Mazen
+            </span>
+            <span class="block mt-2 text-3xl sm:text-5xl md:text-6xl font-bold text-[var(--m3-on-surface)]" data-t="heroRole">
+              Apps & Games Developer
+            </span>
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wavy Sep 1 -->
+    <div class="w-full overflow-hidden flex items-center justify-center my-6">
+      <canvas id="canvas-wave-1" class="w-full block" style="height: 45px;"></canvas>
+    </div>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-16 scroll-mt-24">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--m3-on-surface)] reveal-item reveal-up" data-t="skillsTitle">
+          Skills
+        </h2>
+      </div>
+
+      <!-- Skills Chips Flat Grid (Flat, No Shadows) -->
+      <div id="skills-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        <!-- Rendered dynamically by script -->
+      </div>
+    </section>
+
+    <!-- Wavy Sep 2 -->
+    <div class="w-full overflow-hidden flex items-center justify-center my-6">
+      <canvas id="canvas-wave-2" class="w-full block" style="height: 45px;"></canvas>
+    </div>
+
+    <!-- Latest Works (Projects Showcase) -->
+    <section id="projects" class="py-16 scroll-mt-24">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--m3-on-surface)] reveal-item reveal-up" data-t="projectsTitle">
+          Latest Works
+        </h2>
+      </div>
+
+      <!-- Projects Flat Card Layout (Flat, No Shadows) -->
+      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <!-- Rendered dynamically by script -->
+      </div>
+    </section>
+
+    <!-- Wavy Sep 3 -->
+    <div class="w-full overflow-hidden flex items-center justify-center my-6">
+      <canvas id="canvas-wave-3" class="w-full block" style="height: 45px;"></canvas>
+    </div>
+
+    <!-- Contact Me Form Section -->
+    <section id="contact" class="py-16 scroll-mt-24 max-w-3xl mx-auto">
+      <div class="text-center mb-10 reveal-item reveal-up">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--m3-on-surface)]" data-t="contactTitle">
+          Contact ME
+        </h2>
+        <p class="mt-2 text-sm sm:text-base text-[var(--m3-on-surface-variant)]" data-t="contactSubtitle">
+          Have an app idea or a game concept? Fill out the form below to reach out directly!
+        </p>
+      </div>
+
+      <!-- Contact Card Flat styled (Flat, No Shadows) -->
+      <div class="rounded-[48px] md:rounded-[64px] bg-[var(--m3-surface-container)] p-6 sm:p-10 shadow-none reveal-item reveal-scale" style="transition-delay: 0.1s;">
+        <div class="flex flex-col items-center text-center gap-6">
+          <!-- Email badge icon -->
+          <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="mail" class="w-8 h-8 text-white"></i>
+          </div>
+
+          <div>
+            <span class="block text-xs font-bold uppercase tracking-widest text-[var(--m3-on-surface-variant)] mb-2" data-t="contactEmailLabel">
+              My Email
+            </span>
+            <span id="contact-email-text" class="text-lg sm:text-xl font-bold text-[var(--m3-on-surface)] font-mono break-all">
+              mazenabdelhay73@gmail.com
+            </span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="w-full flex flex-col sm:flex-row gap-4 mt-2">
+            <button
+              id="copy-email-btn"
+              type="button"
+              class="flex-1 py-4 px-5 rounded-full bg-[var(--m3-surface-container-high)] text-[var(--m3-on-surface)] font-bold tracking-wide flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.01] active:scale-95"
+            >
+              <i data-lucide="copy" class="w-5 h-5"></i>
+              <span id="copy-email-text" data-t="contactCopyBtn">Copy Email</span>
+            </button>
+
+            <a
+              id="gmail-btn"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=mazenabdelhay73@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex-1 py-4 px-5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:opacity-95 text-white font-bold tracking-wide flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.01] active:scale-95"
+            >
+              <i data-lucide="send" class="w-5 h-5"></i>
+              <span data-t="contactGmailBtn">Open in Gmail</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Material 3 Expressive Rounded Floating Footer -->
+  <footer class="max-w-6xl mx-auto my-16 p-8 sm:p-12 bg-[var(--m3-surface-container)] rounded-[48px] md:rounded-[64px] relative z-10 overflow-hidden">
+    <!-- Fluid ambient decorative backdrop shapes representing M3 Expressive style -->
+    <div class="absolute -top-12 -left-12 w-32 h-32 rounded-full bg-blue-500/10 dark:bg-blue-500/5 blur-2xl pointer-events-none"></div>
+    <div class="absolute -bottom-12 -right-12 w-32 h-32 rounded-full bg-purple-500/10 dark:bg-purple-500/5 blur-2xl pointer-events-none"></div>
+    
+    <div class="relative flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="text-center ltr:sm:text-left rtl:sm:text-right">
+        <span class="text-3xl font-black text-[var(--m3-on-surface)] block mb-1 tracking-tight" data-t="brandName">
+          Mazen
+        </span>
+        <p class="text-xs font-bold text-[var(--m3-on-surface-variant)] uppercase tracking-wider leading-relaxed" data-t="footerCopyright">
+          © 2026 Mazen.
+        </p>
+      </div>
+
+      <!-- Social Networks Github logo only -->
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/Mazen-73" target="_blank" rel="noopener noreferrer" class="p-4 rounded-full bg-[var(--m3-surface-container-high)] text-[var(--m3-on-surface)] hover:text-indigo-400 hover:scale-110 active:scale-95 transition-all flex items-center justify-center" aria-label="Github Profile">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast/Notification container for bilingual form alerts -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm"></div>
+
+  <!-- Translation Database, State Managers and Script Core -->
+  <script>
+    const translations = {
+      en: {
+        brandName: 'MAZEN',
+        role: 'Apps & Games Developer',
+        navHome: 'Home',
+        navSkills: 'Skills',
+        navProjects: 'Projects',
+        navContact: 'Contact',
+        heroGreeting: 'Hi, I am Mazen',
+        heroRole: 'Apps & Games Developer',
+        heroIntro: 'Crafting immersive mobile applications and engaging game mechanics. Specializing in high-performance Android architectures, Custom Canvas Views, and versatile cross-platform game development.',
+        skillsTitle: 'Skills',
+        skillsSubtitle: 'Explore the primary technologies I build with. Every card is beautifully flat.',
+        projectsTitle: 'Projects',
+        projectsSubtitle: 'Explore a curated showcase of interactive applications and game mechanics',
+        projectViewCode: 'GitHub Repository',
+        projectComingSoon: 'Coming Soon',
+        contactTitle: 'Contact ME',
+        contactSubtitle: 'Have an app idea or a game concept? Reach out directly via email!',
+        contactEmailLabel: 'My Email',
+        contactCopyBtn: 'Copy Email',
+        contactCopiedBtn: 'Copied!',
+        contactGmailBtn: 'Open in Gmail',
+        contactCopySuccess: 'Email copied to clipboard!',
+        footerCopyright: '© 2026 Mazen.',
+        typeApp: 'App',
+        typeGame: 'Game',
+      },
+      ar: {
+        brandName: 'مازن',
+        role: 'مطور تطبيقات وألعاب',
+        navHome: 'الرئيسية',
+        navSkills: 'المهارات',
+        navProjects: 'أعمالي',
+        navContact: 'اتصل بي',
+        heroGreeting: 'أهلاً، أنا مازن',
+        heroRole: 'مطور تطبيقات وألعاب',
+        heroIntro: 'أصنع تطبيقات هواتف تفاعلية وميكانيكيات ألعاب ممتعة. متخصص في هيكلة تطبيقات أندرويد عالية الأداء، رسم واجهات الكانفاس المخصصة، وتطوير الألعاب ثنائية الأبعاد.',
+        skillsTitle: 'المهارات',
+        skillsSubtitle: 'استكشف التقنيات البرمجية التي أستخدمها في تطوير مشاريعي.',
+        projectsTitle: 'أعمالي',
+        projectsSubtitle: 'تصفح باقة مختارة من التطبيقات المتطورة والألعاب التفاعلية التي قمت بتصميمها',
+        projectViewCode: 'مستودع جيت هاب',
+        projectComingSoon: 'قريباً',
+        contactTitle: 'تواصل معي',
+        contactSubtitle: 'لديك فكرة تطبيق أو مشروع لعبة? تواصل معي مباشرة عبر البريد الإلكتروني!',
+        contactEmailLabel: 'بريدي الإلكتروني',
+        contactCopyBtn: 'نسخ البريد',
+        contactCopiedBtn: 'تم النسخ!',
+        contactGmailBtn: 'فتح جيميل',
+        contactCopySuccess: 'تم نسخ البريد الإلكتروني!',
+        footerCopyright: 'حقوق الطبع والنشر © 2026 مازن.',
+        typeApp: 'تطبيق',
+        typeGame: 'لعبة',
+      }
+    };
+
+    const projects = [
+      {
+        id: 'tasbeeh',
+        titleEN: 'Tasbeeh',
+        titleAR: 'تطبيق تسبيح',
+        descEN: 'Tasbeeh is your daily companion to help you remember Allah. It includes features like a smart digital rosary, morning and evening dhikr (reading/listening with a serene voice), and other features designed to help you focus without draining your device battery and resources.',
+        descAR: 'تطبيق تسبيح هو رفيقك اليومي الذي يساعدك على ذكر الله في أي وقت.ويضم العديد من المزايا مثل السبحة الإلكترونية الذكية، وأذكار الصباح والمساء (قراءة أو استماع بصوت عذب)، بالإضافة إلى العديد من المزايا الأخرى التي تساعدك على التركيز دون استهلاك لبطارية وموارد جهازك',
+        tags: ['Android Studio', 'Kotlin', 'Material 3'],
+        githubUrl: 'https://github.com/Mazen-73/tasbeeh',
+        icon: 'smartphone',
+        type: 'app',
+        version: 'v8.0.0',
+        logo: 'assets/tasbeeh.png',
+        gradientLight: 'from-[#EADBC8] via-[#DAC0A3] to-[#B0927A]', // درجات بيج كريمي هادية تليق بالسبحة
+        gradientDark: 'from-[#2B1B11] via-[#4A321A] to-[#23140B]'
+      },
+      {
+        id: 'lifecounter',
+        titleEN: 'LifeCounter',
+        titleAR: 'حساب العمر',
+        descEN: 'LifeCounter is an intuitive age calculator that helps you discover the details of your lifetime journey with ease. It allows you to calculate your age in years, months, days, and even minutes.',
+        descAR: 'حساب العمر هو تطبيق يساعدك على اتكتشاف تفاصيل رحلتك العمرية بكل سهولة. يتيح لك التطبيق حساب رحلة حياتك بالسنوات، الشهور، الأيام، وحتى الدقائق.',
+        tags: ['Android Studio', 'Kotlin', 'Canvas API'],
+        githubUrl: 'https://github.com/Mazen-73/lifecounter',
+        icon: 'smartphone',
+        type: 'app',
+        version: 'v5.0.0',
+        logo: 'assets/lifecounter.png',
+        gradientLight: 'from-[#7DD3FC] via-[#38BDF8] to-[#0284C7]', // أزرق سماوي منعش وخفيف
+        gradientDark: 'from-[#0052D4] via-[#4364F7] to-[#6FB1FC]'
+      },
+      {
+        id: 'cashy',
+        titleEN: 'Cashy',
+        titleAR: 'تطبيق إدارة المصاريف',
+        descEN: 'Cashy is your daily companion to control your finances with comfort and ease. It allows you to track your daily expenses and income accurately to provide a clear and comprehensive financial overview, presented in a modern Material 3 Expressive interface.',
+        descAR: 'تطبيق إدارة المصاريف هو رفيقك اليومي للتحكم في أموالك بكل سهولة وراحة. يتيح لك التطبيق تتبع مصاريفك ودخلك اليومي بدقة، ليوفر لك رؤية مالية واضحة وشاملة من خلال واجهة material 3 expressive',
+        tags: ['Android Studio', 'Kotlin', 'SQLite'],
+        githubUrl: 'https://github.com/Mazen-73/cashy',
+        icon: 'smartphone',
+        type: 'app',
+        version: 'v4.0.0',
+        logo: 'assets/cashy.png',
+        gradientLight: 'from-[#A8DABC] via-[#74C69D] to-[#40916C]', // أخضر مينت هادي ومريح
+        gradientDark: 'from-[#0A2E24] via-[#0F4C3A] to-[#061F18]'
+      },
+      {
+        id: 'thedot',
+        titleEN: 'the Dot',
+        titleAR: 'لعبة النقطة (the Dot)',
+        descEN: 'A thrilling platformer game where a dot is a shape living in Shapes Village. When something bad happens, the brave dot embarks on an adventurous mission to rescue his kidnapped brother.',
+        descAR: 'لعبة منصات مثيرة تحكي قصة نقطة تعيش في قرية الأشكال، حيث يحدث شيء سيء في القرية وتحاول النقطة جاهدة إنقاذ أخيها الضائع.',
+        tags: ['Godot', 'GDScript', 'Physics'],
+        githubUrl: 'https://github.com/Mazen-73/dot-game',
+        icon: 'gamepad-2',
+        type: 'game',
+        version: 'v1.0.0',
+        logo: 'assets/dot.png',
+        comingSoon: true,
+        gradientLight: 'from-[#F9A8D4] via-[#F472B6] to-[#DB2777]', // درجات بينك فاتحة مبهجة للألعاب
+        gradientDark: 'from-purple-900 via-pink-950 to-rose-950'
+      },
+    ];
+
+    const skills = [
+      { name: 'GODOT', icon: 'gamepad-2', colorClass: 'skill-godot' },
+      { name: 'ANDROID STUDIO', icon: 'smartphone', colorClass: 'skill-android' },
+      { name: 'HTML', icon: 'code-2', colorClass: 'skill-html' },
+      { name: 'CSS', icon: 'palette', colorClass: 'skill-css' },
+      { name: 'JAVASCRIPT', icon: 'terminal', colorClass: 'skill-js' },
+      { name: 'KOTLIN', icon: 'zap', colorClass: 'skill-kotlin' },
+      { name: 'PYTHON', icon: 'database', colorClass: 'skill-python' },
+    ];
+
+    // Robust localStorage fallback wrappers to handle sandboxed iframes securely
+    function safeGetLocalStorage(key, defaultValue) {
+      try {
+        const val = localStorage.getItem(key);
+        return val !== null ? val : defaultValue;
+      } catch (err) {
+        console.warn(`localStorage read failed for ${key}, using fallback:`, err);
+        return defaultValue;
+      }
+    }
+
+    // State Variables
+    let state = {
+      lang: safeGetLocalStorage('mazen-lang', 'en'),
+      isDark: safeGetLocalStorage('mazen-theme', 'dark') !== 'light',
+      activeTab: 'home',
+      isSending: false
+    };
+
+    let initializedWaves = [];
+
+    // Robust image loading fallback pipeline to prevent broken assets and console noise
+    function handleImgError(img, fileName, fallbackName) {
+      if (!img.dataset.retryCount) {
+        img.dataset.retryCount = '1';
+        img.src = `assets/${fileName}.png`;
+      } else if (img.dataset.retryCount === '1') {
+        img.dataset.retryCount = '2';
+        img.src = `assets/${fallbackName}.svg`;
+      } else if (img.dataset.retryCount === '2') {
+        img.dataset.retryCount = '3';
+        img.src = 'logo.png';
+      } else {
+        img.onerror = null;
+        img.src = ''; 
+        img.style.display = 'none'; 
+      }
+    }
+
+    // Main App Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sync styles immediately
+      updateThemeStyles();
+      updateTranslations();
+
+      // Launch Canvas Waves with correct colors based on dark/light
+      initAllWaves();
+
+      // Initialize Scroll Reveal Animations
+      initRevealObserver();
+
+      // Set event listeners for Settings controls safely
+      const langBtn = document.getElementById('lang-btn');
+      const themeBtn = document.getElementById('theme-btn');
+      const drawerLangBtn = document.getElementById('drawer-lang-btn');
+      const drawerThemeBtn = document.getElementById('drawer-theme-btn');
+
+      if (langBtn) langBtn.addEventListener('click', toggleLanguage);
+      if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+      if (drawerLangBtn) drawerLangBtn.addEventListener('click', toggleLanguage);
+      if (drawerThemeBtn) drawerThemeBtn.addEventListener('click', toggleTheme);
+
+      // Mobile Menu Drawer Control Listeners safely
+      const mobileBtn = document.getElementById('mobile-menu-btn');
+      const closeBtn = document.getElementById('close-drawer-btn');
+      const backdrop = document.getElementById('drawer-backdrop');
+
+      if (mobileBtn) mobileBtn.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+      // Smooth scroll navigation clicks with offset and easing
+      document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href');
+          const targetEl = document.querySelector(targetId);
+          if (targetEl) {
+            const navbarInner = document.getElementById('navbar-inner');
+            const navbarHeight = navbarInner ? navbarInner.offsetHeight : 80;
+            const elementPosition = targetEl.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - navbarHeight - 24;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+
+      // Setup Logo Box Bouncing Spring Behavior
+      const logoBox = document.getElementById('hero-logo-box');
+      if (logoBox) {
+        logoBox.addEventListener('click', () => {
+          logoBox.classList.add('logo-spring-active');
+          setTimeout(() => logoBox.classList.remove('logo-spring-active'), 800);
+        });
+      }
+
+      // Contact Email copy-to-clipboard listener
+      const copyEmailBtn = document.getElementById('copy-email-btn');
+      if (copyEmailBtn) {
+        copyEmailBtn.addEventListener('click', handleCopyEmail);
+      }
+
+      // Initial active link positioning
+      setTimeout(() => {
+        updateActiveSectionOnScroll();
+        updateNavIndicator();
+      }, 150);
+    });
+
+    // Intersection Observer for Scroll Reveal Animations
+    let revealObserver;
+
+    function initRevealObserver() {
+      if (!window.IntersectionObserver) {
+        // Fallback for older browsers
+        document.querySelectorAll('.reveal-item').forEach(el => el.classList.add('revealed'));
+        return;
+      }
+
+      const revealCallback = (entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      };
+
+      revealObserver = new IntersectionObserver(revealCallback, {
+        root: null,
+        threshold: 0.03, // Trigger when 3% of the element is visible
+        rootMargin: '0px 0px -30px 0px' // Slightly offset trigger point
+      });
+
+      refreshRevealElements();
+    }
+
+    function refreshRevealElements() {
+      if (!revealObserver) return;
+      document.querySelectorAll('.reveal-item:not(.revealed)').forEach(el => {
+        revealObserver.observe(el);
+      });
+    }
+
+    // Toggle Language
+    function toggleLanguage() {
+      state.lang = state.lang === 'en' ? 'ar' : 'en';
+      safeSetLocalStorage('mazen-lang', state.lang);
+      updateTranslations();
+      closeDrawer();
+    }
+
+    // Toggle Light vs Dark Theme
+    function toggleTheme() {
+      state.isDark = !state.isDark;
+      safeSetLocalStorage('mazen-theme', state.isDark ? 'dark' : 'light');
+      updateThemeStyles();
+      
+      // Live reload waves color properties instantly
+      const pColor = state.isDark ? '#90cdff' : '#006495';
+      const sColor = state.isDark ? '#cfbdfe' : '#655675';
+      if (initializedWaves[0]) initializedWaves[0].updateColor(pColor);
+      if (initializedWaves[1]) initializedWaves[1].updateColor(sColor);
+      if (initializedWaves[2]) initializedWaves[2].updateColor(pColor);
+    }
+
+    // Sync theme class to document DOM
+    function updateThemeStyles() {
+      if (state.isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    // Main Translation Update rendering Engine
+    function updateTranslations() {
+      const t = translations[state.lang] || translations['en'];
+      
+      // Update HTML direction attribute
+      document.documentElement.setAttribute('dir', state.lang === 'ar' ? 'rtl' : 'ltr');
+      document.documentElement.setAttribute('lang', state.lang);
+
+      // Translate all data-t components
+      document.querySelectorAll('[data-t]').forEach(el => {
+        const key = el.getAttribute('data-t');
+        if (t && t[key]) el.textContent = t[key];
+      });
+
+      // Translate all placeholder inputs
+      document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-t-placeholder');
+        if (t && t[key]) el.setAttribute('placeholder', t[key]);
+      });
+
+      // Update button labels on nav & drawers safely
+      const langText = document.getElementById('lang-toggle-text');
+      if (langText) langText.textContent = state.lang === 'en' ? 'العربية' : 'English';
+      
+      const drawerLangText = document.getElementById('drawer-lang-text');
+      if (drawerLangText) drawerLangText.textContent = state.lang === 'en' ? 'العربية' : 'English';
+
+      // Dynamic builders
+      renderSkills();
+      renderProjects();
+      updateDrawerDirection();
+
+      // Refresh vector Lucide Icon classes safely with fallback error block
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      } catch (err) {
+        console.warn('Lucide icons creation error bypassed:', err);
+      }
+
+      // Re-trigger scroll positions highlight
+      setTimeout(updateNavIndicator, 100);
+    }
+
+    // Draw dynamic Skills flat chips
+    function renderSkills() {
+      const container = document.getElementById('skills-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      skills.forEach((skill, idx) => {
+        const div = document.createElement('div');
+        div.className = `p-4 rounded-full bg-[var(--m3-surface-container)] flex flex-col items-center justify-center text-center cursor-pointer select-none transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.03] group aspect-square w-full max-w-[120px] mx-auto ${skill.colorClass} reveal-item reveal-scale`;
+        div.style.transitionDelay = `${idx * 0.05}s`;
+        
+        const fileName = skill.name.toLowerCase().replace(/\s+/g, '');
+        const fallbackName = skill.name.toLowerCase().split(' ')[0];
+
+        div.innerHTML = `
+          <div class="mb-2 text-[var(--m3-on-surface)] transition-transform duration-300 group-hover:scale-115 flex items-center justify-center w-10 h-10">
+            <img 
+              src="assets/${fileName}.svg" 
+              alt="${skill.name}" 
+              class="w-10 h-10 object-contain filter-none"
+              onerror="handleImgError(this, '${fileName}', '${fallbackName}')"
+            />
+          </div>
+          <span class="text-[10px] sm:text-xs font-black tracking-wider text-[var(--m3-on-surface)] leading-tight">
+            ${skill.name}
+          </span>
+        `;
+        container.appendChild(div);
+      });
+      if (typeof refreshRevealElements === 'function') refreshRevealElements();
+    }
+
+    // Draw dynamic showcase project cards
+    function renderProjects() {
+      const container = document.getElementById('projects-grid');
+      if (!container) return;
+      container.innerHTML = '';
+      const t = translations[state.lang];
+
+      projects.forEach((project, idx) => {
+        const pTitle = state.lang === 'en' ? project.titleEN : project.titleAR;
+        const pDesc = state.lang === 'en' ? project.descEN : project.descAR;
+
+        const article = document.createElement('article');
+        const disabledClasses = project.comingSoon
+          ? "grayscale opacity-70 saturate-50"
+          : "hover:-translate-y-2 hover:bg-[var(--m3-surface-container-high)]";
+        article.className = `rounded-[48px] overflow-hidden bg-[var(--m3-surface-container)] flex flex-col shadow-none transition-all duration-500 relative ${disabledClasses} reveal-item reveal-up`;
+        article.style.transitionDelay = `${idx * 0.1}s`;
+
+        const lightClasses = project.gradientLight || 'from-blue-100 to-indigo-100';
+        const darkClasses = (project.gradientDark || 'from-blue-900 to-indigo-900')
+          .split(' ')
+          .map(cls => `dark:${cls}`)
+          .join(' ');
+
+        article.innerHTML = `
+          <div class="h-28 bg-gradient-to-r ${lightClasses} ${darkClasses} p-6 flex items-center justify-between relative overflow-hidden transition-all duration-300">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
+                <img
+                  src="${project.logo || 'logo.png'}"
+                  alt="Logo"
+                  class="w-11 h-11 object-contain rounded-full select-none"
+                  onerror="this.onerror=null; this.src='logo.png';"
+                />
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-white leading-tight">${pTitle}</h3>
+                <div class="flex items-center gap-2 mt-1.5">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wide uppercase bg-white/20 text-white flex items-center gap-1 select-none">
+                    <i data-lucide="${project.type === 'game' ? 'gamepad-2' : 'smartphone'}" class="w-3 h-3"></i>
+                    <span>${project.type === 'game' ? t.typeGame : t.typeApp}</span>
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-white/90 select-none">
+                    ${project.version}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="text-white/90">
+              <i data-lucide="${project.type === 'game' ? 'gamepad-2' : 'smartphone'}" class="w-7 h-7 animate-pulse"></i>
+            </div>
+            ${project.comingSoon ? `
+            <div class="absolute top-3 ltr:right-3 rtl:left-3 px-4 py-1.5 rounded-full text-base sm:text-lg font-black tracking-widest uppercase bg-amber-400 text-amber-950 select-none shadow-lg animate-pulse z-10">
+              SOON
+            </div>` : ''}
+          </div>
+
+          <!-- Body -->
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <p class="text-sm text-[var(--m3-on-surface-variant)] leading-relaxed mb-6 font-medium">
+              ${pDesc}
+            </p>
+
+            <div class="space-y-4">
+              ${project.comingSoon ? `
+              <!-- Disabled coming-soon button -->
+              <div
+                aria-disabled="true"
+                class="w-full py-3 px-4 rounded-full bg-[var(--m3-surface-container-high)] flex items-center justify-center gap-2 text-sm font-bold text-[var(--m3-on-surface-variant)] opacity-70 cursor-not-allowed select-none shadow-none"
+              >
+                <i data-lucide="lock" class="w-5 h-5"></i>
+                <span>${t.projectComingSoon}</span>
+              </div>` : `
+              <!-- View code link -->
+              <a
+                href="${project.githubUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full py-3 px-4 rounded-full bg-[var(--m3-secondary-container)] flex items-center justify-center gap-2 text-sm font-bold text-[var(--m3-on-secondary-container)] hover:opacity-90 transition-all group shadow-none"
+              >
+                <i data-lucide="github" class="w-5 h-5 text-indigo-400"></i>
+                <span>${t.projectViewCode}</span>
+              </a>`}
+            </div>
+          </div>
+        `;
+        container.appendChild(article);
+      });
+      if (typeof refreshRevealElements === 'function') refreshRevealElements();
+    }
+
+    // Dynamic Mobile Drawer actions with keyboard focus trapping & escape handlers
+    function openDrawer() {
+      const drawer = document.getElementById('mobile-drawer');
+      const backdrop = document.getElementById('drawer-backdrop');
+      const panel = document.getElementById('drawer-panel');
+      const toggleBtn = document.getElementById('mobile-menu-btn');
+      const closeBtn = document.getElementById('close-drawer-btn');
+
+      if (!drawer || !backdrop || !panel) return;
+
+      drawer.classList.remove('pointer-events-none', 'opacity-0');
+      drawer.classList.add('opacity-100');
+      drawer.setAttribute('aria-hidden', 'false');
+      backdrop.classList.add('opacity-100');
+      backdrop.classList.remove('opacity-0');
+      panel.classList.remove('translate-x-full', '-translate-x-full');
+
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+      
+      // Shift focus inside drawer safely for screen readers & keyboard users
+      setTimeout(() => {
+        if (closeBtn) closeBtn.focus();
+      }, 100);
+
+      document.addEventListener('keydown', handleEscapeKey);
+      document.addEventListener('keydown', handleFocusTrap);
+    }
+
+    function closeDrawer() {
+      const drawer = document.getElementById('mobile-drawer');
+      const backdrop = document.getElementById('drawer-backdrop');
+      const panel = document.getElementById('drawer-panel');
+      const toggleBtn = document.getElementById('mobile-menu-btn');
+
+      if (!drawer || !backdrop || !panel) return;
+
+      drawer.classList.add('pointer-events-none', 'opacity-0');
+      drawer.classList.remove('opacity-100');
+      drawer.setAttribute('aria-hidden', 'true');
+      backdrop.classList.remove('opacity-100');
+      backdrop.classList.add('opacity-0');
+      
+      // Slide back to corresponding direction
+      if (state.lang === 'ar') {
+        panel.classList.add('-translate-x-full');
+      } else {
+        panel.classList.add('translate-x-full');
+      }
+
+      if (toggleBtn) {
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.focus();
+      }
+
+      document.removeEventListener('keydown', handleEscapeKey);
+      document.removeEventListener('keydown', handleFocusTrap);
+    }
+
+    function handleEscapeKey(e) {
+      if (e.key === 'Escape') {
+        closeDrawer();
+      }
+    }
+
+    function handleFocusTrap(e) {
+      const panel = document.getElementById('drawer-panel');
+      if (!panel) return;
+      
+      const focusableEls = panel.querySelectorAll('button, [href], input, select, textarea, [tabindex="0"]');
+      if (focusableEls.length === 0) return;
+      
+      const firstFocusableEl = focusableEls[0];
+      const lastFocusableEl = focusableEls[focusableEls.length - 1];
+
+      if (e.key === 'Tab') {
+        if (e.shiftKey) { /* shift + tab */
+          if (document.activeElement === firstFocusableEl) {
+            lastFocusableEl.focus();
+            e.preventDefault();
+          }
+        } else { /* tab */
+          if (document.activeElement === lastFocusableEl) {
+            firstFocusableEl.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    }
+
+    function updateDrawerDirection() {
+      const panel = document.getElementById('drawer-panel');
+      if (!panel) return;
+      if (state.lang === 'ar') {
+        panel.classList.add('left-0', '-translate-x-full');
+        panel.classList.remove('right-0', 'translate-x-full');
+      } else {
+        panel.classList.add('right-0', 'translate-x-full');
+        panel.classList.remove('left-0', '-translate-x-full');
+      }
+    }
+
+    // Auto close drawer when clicking anchors
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', closeDrawer);
+    });
+
+    // Wavy Canvas Draw Engine (replicates Android Custom View Sine sinus wave)
+    function initWavyCanvas(canvasId, color, speed) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      let offset = 0;
+      let animId;
+      let width = 0;
+      let height = 0;
+
+      const resizeCanvas = () => {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        width = rect.width;
+        height = rect.height;
+      };
+
+      resizeCanvas();
+      const observer = new ResizeObserver(() => resizeCanvas());
+      observer.observe(canvas);
+
+      const draw = () => {
+        if (width <= 0 || height <= 0) {
+          animId = requestAnimationFrame(draw);
+          return;
+        }
+        ctx.clearRect(0, 0, width, height);
+        
+        const centerY = height / 2;
+        const amplitude = height / 3;
+        const frequency = 0.015;
+
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = color;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        ctx.moveTo(0, centerY);
+        for (let x = 0; x <= width; x += 4) {
+          const y = centerY + amplitude * Math.sin(x * frequency + offset);
+          ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        offset += speed;
+        animId = requestAnimationFrame(draw);
+      };
+
+      draw();
+
+      return {
+        updateColor: (newColor) => {
+          color = newColor;
+        },
+        destroy: () => {
+          cancelAnimationFrame(animId);
+          observer.disconnect();
+        }
+      };
+    }
+
+    function initAllWaves() {
+      initializedWaves.forEach(w => w.destroy());
+      initializedWaves = [];
+
+      const pColor = state.isDark ? '#90cdff' : '#006495';
+      const sColor = state.isDark ? '#cfbdfe' : '#655675';
+
+      initializedWaves.push(initWavyCanvas('canvas-wave-1', pColor, 0.04));
+      initializedWaves.push(initWavyCanvas('canvas-wave-2', sColor, 0.06));
+      initializedWaves.push(initWavyCanvas('canvas-wave-3', pColor, 0.05));
+    }
+
+    // Scroll Tracking Navigation Highlight sliding indicator bar
+    const sections = ['home', 'skills', 'projects', 'contact'];
+
+    function updateActiveSectionOnScroll() {
+      const scrollPos = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const middleOfViewport = scrollPos + (viewportHeight / 3);
+
+      let activeSec = 'home';
+
+      for (const secId of sections) {
+        const el = document.getElementById(secId);
+        if (el) {
+          const top = el.offsetTop;
+          if (middleOfViewport >= top) {
+            activeSec = secId;
+          }
+        }
+      }
+
+      if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 120) {
+        activeSec = 'contact';
+      }
+
+      if (activeSec !== state.activeTab) {
+        state.activeTab = activeSec;
+        updateNavIndicator();
+      }
+    }
+
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        window.requestAnimationFrame(() => {
+          const nav = document.getElementById('navbar');
+          const navInner = document.getElementById('navbar-inner');
+          if (nav && navInner) {
+            const scrolled = window.scrollY > 20;
+            if (scrolled) {
+              nav.classList.add('py-2');
+              nav.classList.remove('py-4');
+              navInner.classList.add('py-2.5', 'shadow-xl');
+              navInner.classList.remove('py-4');
+            } else {
+              nav.classList.add('py-4');
+              nav.classList.remove('py-2');
+              navInner.classList.add('py-4');
+              navInner.classList.remove('py-2.5', 'shadow-xl');
+            }
+          }
+          updateActiveSectionOnScroll();
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    }, { passive: true });
+
+    // Sliding indicator layout position matching active section
+    function updateNavIndicator() {
+      const activeLink = document.querySelector(`.nav-link[data-section="${state.activeTab}"]`);
+      const indicator = document.getElementById('nav-indicator');
+
+      if (activeLink && indicator) {
+        indicator.style.opacity = '1';
+        
+        document.querySelectorAll('.nav-link').forEach(link => {
+          if (link === activeLink) {
+             link.classList.add('text-blue-600', 'dark:text-blue-300');
+             link.classList.remove('text-[var(--m3-on-surface-variant)]');
+           } else {
+             link.classList.remove('text-blue-600', 'dark:text-blue-300');
+             link.classList.add('text-[var(--m3-on-surface-variant)]');
+           }
+         });
+ 
+         indicator.style.left = `${activeLink.offsetLeft}px`;
+         indicator.style.width = `${activeLink.offsetWidth}px`;
+       } else if (indicator) {
+         indicator.style.opacity = '0';
+       }
+     }
+
+    // Copy email address to clipboard with Toast feedback + temporary button state
+    function handleCopyEmail() {
+      const emailEl = document.getElementById('contact-email-text');
+      const btnText = document.getElementById('copy-email-text');
+      const t = translations[state.lang];
+      if (!emailEl) return;
+
+      const email = emailEl.textContent.trim();
+
+      const showCopied = () => {
+        showToast(t.contactCopySuccess, 'success');
+        if (btnText) {
+          btnText.textContent = t.contactCopiedBtn;
+          setTimeout(() => { btnText.textContent = translations[state.lang].contactCopyBtn; }, 2000);
+        }
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(showCopied).catch(() => {
+          fallbackCopy(email, showCopied);
+        });
+      } else {
+        fallbackCopy(email, showCopied);
+      }
+    }
+
+    // Fallback copy method for browsers without Clipboard API support
+    function fallbackCopy(text, onSuccess) {
+      const textarea = document.createElement('textarea');
+      text = text.trim();
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        onSuccess();
+      } catch (err) {
+        console.warn('Fallback copy failed:', err);
+      }
+      document.body.removeChild(textarea);
+    }
+
+    // Bilingual Floating Notification Toast Builder
+    function showToast(message, type) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      const colorClass = type === 'success' ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white';
+      const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+
+      toast.className = `flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl transition-all duration-300 transform translate-y-4 opacity-0 ${colorClass}`;
+      toast.innerHTML = `
+        <i data-lucide="${icon}" class="w-5 h-5 flex-shrink-0"></i>
+        <span class="text-sm font-bold">${message}</span>
+      `;
+
+      container.appendChild(toast);
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      } catch (err) {
+        console.warn('Lucide icons creation error bypassed in showToast:', err);
+      }
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-4', 'opacity-0');
+        setTimeout(() => toast.remove(), 350);
+      }, 5000);
+    }
+
+    function safeSetLocalStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (err) {
+        console.warn(`localStorage write failed for ${key}:`, err);
+      }
+    }
+  </script>
+</body>
+</html>
