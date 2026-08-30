@@ -607,52 +607,53 @@
       {
         id: 'tasbeeh',
         titleEN: 'Tasbeeh',
-        titleAR: 'تطبيق تسبيح',
+        titleAR: 'تسبيح',
         descEN: 'Tasbeeh is your daily companion to help you remember Allah. It includes features like a smart digital rosary, morning and evening dhikr (reading/listening with a serene voice), and other features designed to help you focus without draining your device battery and resources.',
         descAR: 'تطبيق تسبيح هو رفيقك اليومي الذي يساعدك على ذكر الله في أي وقت.ويضم العديد من المزايا مثل السبحة الإلكترونية الذكية، وأذكار الصباح والمساء (قراءة أو استماع بصوت عذب)، بالإضافة إلى العديد من المزايا الأخرى التي تساعدك على التركيز دون استهلاك لبطارية وموارد جهازك',
         tags: ['Android Studio', 'Kotlin', 'Material 3'],
         githubUrl: 'https://github.com/Mazen-73/tasbeeh',
         icon: 'smartphone',
         type: 'app',
-        version: 'v8.0.0',
+        version: 'v8.2.0',
         logo: 'assets/tasbeeh.png',
         gradientLight: 'from-[#EADBC8] via-[#DAC0A3] to-[#B0927A]', // درجات بيج كريمي هادية تليق بالسبحة
         gradientDark: 'from-[#2B1B11] via-[#4A321A] to-[#23140B]'
       },
-      {
-        id: 'lifecounter',
-        titleEN: 'LifeCounter',
-        titleAR: 'حساب العمر',
-        descEN: 'LifeCounter is an intuitive age calculator that helps you discover the details of your lifetime journey with ease. It allows you to calculate your age in years, months, days, and even minutes.',
-        descAR: 'حساب العمر هو تطبيق يساعدك على اتكتشاف تفاصيل رحلتك العمرية بكل سهولة. يتيح لك التطبيق حساب رحلة حياتك بالسنوات، الشهور، الأيام، وحتى الدقائق.',
-        tags: ['Android Studio', 'Kotlin', 'Canvas API'],
-        githubUrl: 'https://github.com/Mazen-73/lifecounter',
-        icon: 'smartphone',
-        type: 'app',
-        version: 'v5.0.0',
-        logo: 'assets/lifecounter.png',
-        gradientLight: 'from-[#7DD3FC] via-[#38BDF8] to-[#0284C7]', // أزرق سماوي منعش وخفيف
-        gradientDark: 'from-[#0052D4] via-[#4364F7] to-[#6FB1FC]'
-      },
+{
+  id: 'linky', // غيرت الـ id لـ linky عشان يبقى مناسب للتطبيق
+  titleEN: 'Linky',
+  titleAR: 'لينكي',
+  descEN: 'Download YouTube Videos/Audio with Ease! Save your favorite YouTube videos and music in high quality MP3 or MP4 with a clean, modern interface designed for fast downloads.',
+  descAR: 'حمل فيديوهات وصوتيات يوتيوب بكل سهولة! احفظ فيديوهاتك وموسيقاك المفضلة من يوتيوب بجودة عالية بصيغة MP3 أو MP4 مع واجهة حديثة وأنيقة مصممة لتحميل سريع.', // <--- الفاصلة كانت ناقصة هنا
+  tags: ['Android Studio', 'Kotlin', 'yt-dlp'],
+  githubUrl: '',
+  icon: 'smartphone',
+  type: 'app',
+  version: 'v1.0.0',
+  logo: 'assets/linky.png', // غيرت اسم اللوجو لـ linky.png
+  comingSoon: true,
+  gradientLight: 'from-[#FFF8F7] via-[#B83B52] to-[#6B1426]',
+  gradientDark: 'from-[#1A1112] via-[#8C273A] to-[#FFB3B3]'
+},
       {
         id: 'cashy',
         titleEN: 'Cashy',
-        titleAR: 'تطبيق إدارة المصاريف',
+        titleAR: 'كاشي',
         descEN: 'Cashy is your daily companion to control your finances with comfort and ease. It allows you to track your daily expenses and income accurately to provide a clear and comprehensive financial overview, presented in a modern Material 3 Expressive interface.',
         descAR: 'تطبيق إدارة المصاريف هو رفيقك اليومي للتحكم في أموالك بكل سهولة وراحة. يتيح لك التطبيق تتبع مصاريفك ودخلك اليومي بدقة، ليوفر لك رؤية مالية واضحة وشاملة من خلال واجهة material 3 expressive',
         tags: ['Android Studio', 'Kotlin', 'SQLite'],
         githubUrl: 'https://github.com/Mazen-73/cashy',
         icon: 'smartphone',
         type: 'app',
-        version: 'v4.0.0',
+        version: 'v6.0.0',
         logo: 'assets/cashy.png',
         gradientLight: 'from-[#A8DABC] via-[#74C69D] to-[#40916C]', // أخضر مينت هادي ومريح
         gradientDark: 'from-[#0A2E24] via-[#0F4C3A] to-[#061F18]'
       },
       {
-        id: 'thedot',
-        titleEN: 'the Dot',
-        titleAR: 'لعبة النقطة (the Dot)',
+        id: 'systemreboot',
+        titleEN: 'system reboot',
+        titleAR: 'system reboot',
         descEN: 'A thrilling platformer game where a dot is a shape living in Shapes Village. When something bad happens, the brave dot embarks on an adventurous mission to rescue his kidnapped brother.',
         descAR: 'لعبة منصات مثيرة تحكي قصة نقطة تعيش في قرية الأشكال، حيث يحدث شيء سيء في القرية وتحاول النقطة جاهدة إنقاذ أخيها الضائع.',
         tags: ['Godot', 'GDScript', 'Physics'],
@@ -1322,7 +1323,6 @@
       const textarea = document.createElement('textarea');
       text = text.trim();
       textarea.value = text;
-      textarea.style.position = 'fixed';
       textarea.style.opacity = '0';
       document.body.appendChild(textarea);
       textarea.select();
