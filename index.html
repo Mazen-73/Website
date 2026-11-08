@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mazen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&display=block" rel="stylesheet">
+<style>
+/* ===== Material 3 Expressive tokens ===== */
+:root{
+  --p:#036780;--on-p:#fff;--pc:#B8EAFF;--on-pc:#011F28;
+  --sc:#E5DEFF;--on-sc:#141644;--tc:#FFD7F7;--on-tc:#390035;
+  --s:#F6FAFF;--on-s:#181C21;--sv:#404754;--c:#E9EEF5;--ch:#E3E9F0;--out:#707786;
+  /* motion: expressive spatial spring (overshoots) + effects (no overshoot) */
+  --spring:cubic-bezier(.34,1.56,.64,1);--spring-slow:cubic-bezier(.3,1.35,.5,1);--eff:cubic-bezier(.2,0,0,1);
+}
+:root[data-theme=dark]{
+  --p:#55D5FE;--on-p:#053543;--pc:#054D60;--on-pc:#B8EAFF;
+  --sc:#454075;--on-sc:#E5DEFF;--tc:#77236F;--on-tc:#FFD7F7;
+  --s:#0F1419;--on-s:#DEE3EA;--sv:#BFC7D7;--c:#1C2025;--ch:#262A2F;--out:#8A91A0;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--s);color:var(--on-s);font:400 16px/1.6 'Roboto Flex','Cairo',sans-serif;
+  transition:background-color .4s var(--eff),color .4s var(--eff);overflow-x:hidden}
+button,a{font:inherit;color:inherit;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible{outline:3px solid var(--p);outline-offset:3px}
+.ic{font-family:'Material Symbols Rounded';font-weight:400;font-style:normal;font-size:22px;line-height:1;width:22px;height:22px;display:inline-block;flex:none;overflow:hidden;white-space:nowrap;direction:ltr;letter-spacing:normal;text-transform:none;font-feature-settings:'liga';-webkit-font-feature-settings:'liga';font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24;user-select:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* ===== Top app bar ===== */
+.top{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;justify-content:space-between;align-items:center;
+  padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px;pointer-events:none}
+.top>*{pointer-events:auto}
+.brand{font-weight:900;font-size:22px;font-variation-settings:'wdth' 125;padding:8px 18px;border-radius:999px;background:var(--c)}
+.ctrls{display:flex;gap:8px}
+.round{height:48px;min-width:48px;padding:0 16px;border:0;border-radius:24px;background:var(--c);display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;transition:border-radius .4s var(--spring),transform .4s var(--spring),background-color .2s}
+.round:hover{border-radius:16px;background:var(--ch)}
+.round:active{transform:scale(.9);border-radius:14px}
+.sun{display:none}[data-theme=dark] .sun{display:block}[data-theme=dark] .moon{display:none}
+
+/* ===== Expressive bottom nav (port of ExpressiveBottomNav.kt) ===== */
+#bn{max-width:calc(100vw - 24px);position:fixed;z-index:50;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  display:flex;gap:0;padding:6px;border-radius:999px;background:var(--pc);box-shadow:0 6px 20px rgba(0,30,45,.22)}
+.tab{height:48px;width:56px;padding:0 17px;display:flex;align-items:center;border:0;border-radius:999px;overflow:hidden;
+  background:transparent;color:var(--p);transition:width .35s var(--spring),background-color .26s linear,color .26s linear}
+.tab.on{background:var(--p);color:var(--on-p)}
+.tab .lb{flex:none;margin-inline-start:8px;font-weight:700;font-size:14px;white-space:nowrap;opacity:0;transition:opacity .26s linear}
+.tab.on .lb{opacity:1}
+
+/* ===== Hero ===== */
+.hero{min-height:100svh;display:grid;align-items:center;gap:32px;padding-top:96px;padding-bottom:40px;grid-template-columns:1.2fr 1fr}
+.hero h1{font-weight:900;font-size:clamp(44px,8vw,96px);line-height:1;letter-spacing:-.02em;font-variation-settings:'wdth' 120}
+.hero h1 span{display:block}
+.hero .role{margin-top:14px;font-size:clamp(26px,4.4vw,48px);font-weight:700;color:var(--p);font-variation-settings:'wdth' 100}
+.hero p{margin-top:20px;max-width:52ch;color:var(--sv);font-size:18px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{height:56px;padding:0 28px;border:0;border-radius:28px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;
+  background:var(--p);color:var(--on-p);transition:border-radius .45s var(--spring),transform .45s var(--spring),background-color .2s}
+.btn.tonal{background:var(--sc);color:var(--on-sc)}
+.btn:hover{border-radius:16px}
+.btn:active{transform:scale(.94);border-radius:12px}
+.btn[aria-disabled=true]{opacity:.5;cursor:not-allowed;background:var(--ch);color:var(--sv)}
+.logo-stage{display:grid;place-items:center}
+.logo-shape{width:min(78vw,380px);aspect-ratio:1;position:relative;display:grid;place-items:center;cursor:pointer;transition:transform .6s var(--spring)}
+.logo-shape.nobg{background:var(--sc);animation:morph 14s var(--eff) infinite}
+.spin-l{display:block}.spin-d{display:none}[data-theme=dark] .spin-l{display:none}[data-theme=dark] .spin-d{display:block}
+.logo-shape .spin{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;animation:spin 28s linear infinite}
+.mz-d{display:none}[data-theme=dark] .mz-l{display:none}[data-theme=dark] .mz-d{display:block}
+.logo-shape .mz{position:relative;width:60%;height:60%;object-fit:contain}
+@keyframes spin{to{transform:rotate(360deg)}}
+.logo-shape:active{transform:scale(.9) rotate(-6deg)}
+.logo-shape.pop{animation:pop .8s var(--spring)}
+.logo-shape.nobg.pop{animation:morph 14s var(--eff) infinite,pop .8s var(--spring)}
+@keyframes morph{0%,100%{border-radius:50% 50% 50% 50%/50%}25%{border-radius:62% 38% 46% 54%/45% 58% 42% 55%}
+  50%{border-radius:30% 70% 70% 30%/30% 30% 70% 70%}75%{border-radius:42% 58% 33% 67%/58% 40% 60% 42%}}
+@keyframes pop{0%{transform:scale(1)}30%{transform:scale(1.14) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+.in{animation:rise .8s var(--spring-slow) both}
+@keyframes rise{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:none}}
+
+/* ===== Sections ===== */
+section.blk{padding-block:72px 24px}
+h2{font-size:clamp(34px,6vw,60px);font-weight:900;font-variation-settings:'wdth' 118;letter-spacing:-.01em;line-height:1.05;margin-bottom:32px}
+
+/* Project cards */
+#projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px}
+.card{background:var(--bg);color:var(--fg);padding:28px;display:flex;flex-direction:column;gap:18px;border-radius:56px 28px 56px 28px;
+  transition:border-radius .6s var(--spring),transform .6s var(--spring)}
+.card:nth-child(even){border-radius:28px 56px 28px 56px}
+.card:hover{border-radius:28px 56px 28px 56px;transform:translateY(-6px)}
+.card:nth-child(even):hover{border-radius:56px 28px 56px 28px}
+.tas{--bg:#2B1E02;--fg:#E6D1A5}.cash{--bg:#1E4F2C;--fg:#A8F2DC}
+.head{display:flex;align-items:center;gap:16px;min-width:0}
+.pl{width:84px;height:84px;flex:none;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px color-mix(in srgb,var(--fg) 28%,transparent);transition:border-radius .6s var(--spring)}
+.card:hover .pl{border-radius:34%}
+.pl img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+.card h3{font-size:28px;font-weight:800;line-height:1.1;font-variation-settings:'wdth' 112}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 12px;border-radius:14px;font-size:12px;font-weight:700;background:color-mix(in srgb,var(--fg) 16%,transparent)}
+.chip .ic{width:14px;height:14px}
+.card p{opacity:.88;flex:1}
+.card .btn{background:var(--fg);color:var(--bg);width:100%}
+
+/* Contact */
+.contact{background:var(--pc);color:var(--on-pc);border-radius:72px 28px 72px 28px;padding:clamp(28px,6vw,64px);display:grid;gap:24px;justify-items:start}
+.cookie{width:72px;height:72px;background:var(--p);color:var(--on-p);display:grid;place-items:center;animation:morph 10s var(--eff) infinite}
+.contact p{max-width:46ch;opacity:.85}
+.email{font-weight:800;font-size:clamp(20px,4.4vw,40px);line-height:1.15;word-break:break-all;font-variation-settings:'wdth' 110}
+.group{display:flex;flex-wrap:nowrap;gap:2px;width:100%;max-width:520px}
+.group .btn{border-radius:8px;flex:1 1 0;min-width:0;padding:0 14px;gap:8px;white-space:nowrap}
+.group .btn:first-child{border-start-start-radius:28px;border-end-start-radius:28px}
+.group .btn:last-child{border-start-end-radius:28px;border-end-end-radius:28px}
+.group .btn:hover,.group .btn:active{border-radius:28px}
+.group .btn.tonal{background:var(--s);color:var(--on-s)}
+
+/* Footer: scalloped edge + morphing shape */
+footer{position:relative;margin-top:96px;background:var(--c);padding:56px 0 calc(120px + env(safe-area-inset-bottom,0px))}
+footer::before{content:"";position:absolute;left:0;right:0;top:-27px;height:28px;background:radial-gradient(circle at 28px 28px,var(--c) 27.5px,transparent 28.5px) 0 0/56px 28px repeat-x}
+.fbg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.fr{--w:clamp(190px,22vw,300px);position:absolute;inset-inline-end:calc(var(--w) * -.3);bottom:calc(var(--w) * -.58);width:var(--w);height:var(--w);object-fit:contain;animation:spin 28s linear infinite}
+.foot{position:relative;display:flex;align-items:center;justify-content:flex-start;gap:20px;flex-wrap:wrap}
+.foot .round{background:var(--ch)}
+.foot .round:hover{background:var(--sc)}
+.foot b{font-size:34px;font-weight:900;font-variation-settings:'wdth' 125;display:block;line-height:1.1}
+.foot small{color:var(--sv);font-size:14px}
+
+/* Snackbar */
+#snack{position:fixed;z-index:60;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translate(-50%,24px) scale(.9);opacity:0;pointer-events:none;
+  display:flex;align-items:center;gap:10px;padding:14px 20px;border-radius:16px;background:var(--on-s);color:var(--s);font-weight:600;font-size:14px;white-space:nowrap;
+  transition:transform .45s var(--spring),opacity .2s linear}
+#snack.show{transform:translate(-50%,0) scale(1);opacity:1}
+
+#snack{max-width:calc(100vw - 32px);white-space:normal}
+@media(min-width:1500px){body{font-size:18px}.wrap{max-width:1320px}}
+@media(max-width:860px){.hero{grid-template-columns:1fr;min-height:auto;padding-top:104px;gap:24px}.logo-stage{order:-1}.logo-shape{width:min(52vw,260px)}section.blk{padding-top:56px}}
+@media(max-width:520px){.wrap{padding:0 16px}.card{padding:22px;gap:16px}.card h3{font-size:24px}.pl{width:72px;height:72px}
+  .contact{border-radius:48px 24px 48px 24px}.hero p{font-size:16px}.cta .btn{flex:1 1 auto}
+  .brand{font-size:19px;padding:6px 14px}.round{height:44px;min-width:44px;padding:0 12px}footer{margin-top:72px}}
+@media(max-width:400px){.group .btn{padding:0 10px;font-size:14px}.group .ic{display:none}}
+@media(max-width:360px){.top{padding-inline:10px}.brand{font-size:17px}.ctrls{gap:6px}.btn{padding:0 20px}}
+@media(max-height:520px) and (orientation:landscape){.hero{padding-top:88px}.logo-shape{width:160px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <a class="brand" href="#home" data-t="brandName">MAZEN</a>
+  <div class="ctrls">
+    <button class="round" id="lang" aria-label="Language">العربية</button>
+    <button class="round" id="theme" aria-label="Toggle theme"><span class="ic moon">dark_mode</span><span class="ic sun">light_mode</span></button>
+  </div>
+</header>
+
+<main>
+  <section id="home" class="wrap hero">
+    <div>
+      <h1 class="in"><span data-t="heroGreeting">Hi, I am Mazen</span><span class="role" data-t="heroRole">Apps & Games Developer</span></h1>
+      <p class="in" style="animation-delay:.12s" data-t="heroIntro"></p>
+      <div class="cta in" style="animation-delay:.24s">
+        <a class="btn" href="#projects" data-t="ctaWork">See my work</a>
+        <a class="btn tonal" href="#contact" data-t="ctaContact">Contact me</a>
+      </div>
+    </div>
+    <div class="logo-stage in" style="animation-delay:.08s">
+      <div class="logo-shape" id="logo"><img class="spin spin-d" src="assets/roundd.png" alt="" onerror="bgFail(this)"><img class="spin spin-l" src="assets/roundl.png" alt="" onerror="bgFail(this)"><img class="mz mz-d" src="assets/logod.png" alt="Mazen logo" onerror="this.onerror=null;this.src='assets/logo.png'"><img class="mz mz-l" src="assets/logol.png" alt="Mazen logo" onerror="this.onerror=null;this.src='assets/logo.png'"></div>
+    </div>
+  </section>
+
+  <section id="projects" class="blk wrap">
+    <h2 data-t="projectsTitle">Latest Works</h2>
+    <div id="projects-grid"></div>
+  </section>
+
+  <section id="contact" class="blk wrap">
+    <div class="contact">
+      <div class="cookie"><span class="ic" style="font-size:32px;width:32px;height:32px">mail</span></div>
+      <h2 style="margin:0" data-t="contactTitle">Contact me</h2>
+      <p data-t="contactSubtitle"></p>
+      <div class="email" id="email">mazenabdelhay73@gmail.com</div>
+      <div class="group">
+        <button class="btn tonal" id="copy"><span class="ic" id="copy-i">content_copy</span><span id="copy-t" data-t="contactCopyBtn">Copy email</span></button>
+        <a class="btn" target="_blank" rel="noopener noreferrer" href="https://mail.google.com/mail/?view=cm&fs=1&to=mazenabdelhay73@gmail.com"><span class="ic">send</span><span data-t="contactGmailBtn">Open in Gmail</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="fbg"><img class="fr spin-d" src="assets/roundd.png" alt="" onerror="this.remove()"><img class="fr spin-l" src="assets/roundl.png" alt="" onerror="this.remove()"></div>
+  <div class="wrap foot">
+    <div><b data-t="brandName">Mazen</b><small data-t="footerCopyright">© 2026 Mazen.</small></div>
+    <a class="round" href="https://github.com/Mazen-73" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg class="ic gh" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+  </div>
+</footer>
+
+<nav id="bn" aria-label="Sections"></nav>
+<div id="snack" role="status"><span class="ic">check_circle</span><span id="snack-t"></span></div>
+
+<script>
+const T={
+ en:{brandName:'MAZEN',navHome:'Home',navProjects:'Projects',navContact:'Contact',heroGreeting:'Hi, I am Mazen',heroRole:'Apps & Games Developer',
+  heroIntro:'I build smooth Android apps and fun games, with a focus on fast, polished Material 3 interfaces.',ctaWork:'See my work',ctaContact:'Contact me',
+  projectsTitle:'Latest Works',contactTitle:'Contact me',contactSubtitle:'Have an app idea or a game concept? Send me an email.',
+  contactCopyBtn:'Copy email',contactCopiedBtn:'Copied',contactGmailBtn:'Open in Gmail',contactCopySuccess:'Email copied to clipboard',
+  footerCopyright:'© 2026 Mazen.',projectViewCode:'GitHub repository',projectComingSoon:'Coming soon',typeApp:'App',typeGame:'Game',lang:'العربية'},
+ ar:{brandName:'مازن',navHome:'الرئيسية',navProjects:'أعمالي',navContact:'اتصل بي',heroGreeting:'أهلاً، أنا مازن',heroRole:'مطور تطبيقات وألعاب',
+  heroIntro:'أصنع تطبيقات أندرويد سلسة وألعاباً ممتعة، مع تركيز على واجهات Material 3 السريعة والأنيقة.',ctaWork:'شاهد أعمالي',ctaContact:'تواصل معي',
+  projectsTitle:'أعمالي',contactTitle:'تواصل معي',contactSubtitle:'لديك فكرة تطبيق أو لعبة؟ راسلني عبر البريد الإلكتروني.',
+  contactCopyBtn:'نسخ البريد',contactCopiedBtn:'تم النسخ',contactGmailBtn:'فتح جيميل',contactCopySuccess:'تم نسخ البريد الإلكتروني',
+  footerCopyright:'© 2026 مازن.',projectViewCode:'مستودع جيت هاب',projectComingSoon:'قريباً',typeApp:'تطبيق',typeGame:'لعبة',lang:'English'}
+};
+const projects=[
+ {cls:'tas',tEN:'Tasbeeh',tAR:'تسبيح',dEN:'Tasbeeh is your daily companion to help you remember Allah. It includes a smart digital rosary, morning and evening dhikr (reading or listening with a serene voice), and more, designed to help you focus without draining your battery.',
+  dAR:'تطبيق تسبيح هو رفيقك اليومي الذي يساعدك على ذكر الله في أي وقت. ويضم السبحة الإلكترونية الذكية، وأذكار الصباح والمساء (قراءة أو استماع بصوت عذب)، ومزايا أخرى تساعدك على التركيز دون استهلاك بطارية جهازك.',
+  tags:['Android Studio','Kotlin','Material 3'],url:'https://github.com/Mazen-73/tasbeeh',v:'v8.2.0',logo:'assets/tasbeeh.png'},
+ {cls:'cash',tEN:'Cashy',tAR:'كاشي',dEN:'Cashy helps you control your finances with ease. Track daily expenses and income accurately and get a clear financial overview in a modern Material 3 Expressive interface.',
+  dAR:'تطبيق كاشي رفيقك اليومي للتحكم في أموالك بسهولة. تتبع مصاريفك ودخلك بدقة واحصل على رؤية مالية واضحة عبر واجهة Material 3 Expressive.',
+  tags:['Android Studio','Kotlin','SQLite'],url:'https://github.com/Mazen-73/cashy',v:'v6.0.0',logo:'assets/cashy.png'}
+];
+const GH=`<svg class="ic gh" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12.297c0-6.627-5.373-12-12-12"/></svg>`;
+const ico=n=>`<span class="ic">${n}</span>`;
+const store={get:(k,d)=>{try{return localStorage.getItem(k)??d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+let lang=store.get('mazen-lang','en'),theme=store.get('mazen-theme','dark'),active='home',lock=false;
+let bgFails=0;window.bgFail=i=>{i.onerror=null;i.remove();if(++bgFails>=2)$('#logo').classList.add('nobg')};
+const root=document.documentElement,$=s=>document.querySelector(s);
+
+/* Bottom nav: icon-only pills, selected pill springs open with its label */
+const tabs=[['home','navHome','home'],['projects','navProjects','widgets'],['contact','navContact','mail']];
+const nav=$('#bn');
+tabs.forEach(([id,key,icon])=>{
+  const b=document.createElement('button');b.className='tab';b.dataset.id=id;b.setAttribute('aria-label',id);
+  b.innerHTML=`${ico(icon)}<span class="lb" data-t="${key}"></span>`;
+  b.onclick=()=>{setActive(id);lock=true;document.getElementById(id).scrollIntoView({behavior:'smooth'});setTimeout(()=>lock=false,900)};
+  nav.appendChild(b);
+});
+function layoutNav(){
+  nav.querySelectorAll('.tab').forEach(t=>{
+    const on=t.dataset.id===active,lb=t.querySelector('.lb');
+    t.classList.toggle('on',on);t.setAttribute('aria-current',on?'page':'false');
+    t.style.width=(on?56+8+lb.offsetWidth+4+12:56)+'px';
+  });
+}
+function setActive(id){if(id===active)return;active=id;layoutNav()}
+function spy(){
+  if(lock)return;
+  let cur='home';const y=scrollY+innerHeight/3;
+  tabs.forEach(([id])=>{if(y>=document.getElementById(id).offsetTop)cur=id});
+  if(innerHeight+scrollY>=document.documentElement.scrollHeight-80)cur='contact';
+  setActive(cur);
+}
+addEventListener('scroll',spy,{passive:true});
+
+function render(){
+  const t=T[lang];
+  root.lang=lang;root.dir=lang==='ar'?'rtl':'ltr';root.dataset.theme=theme;
+  document.querySelectorAll('[data-t]').forEach(e=>{if(t[e.dataset.t]!=null)e.textContent=t[e.dataset.t]});
+  $('#lang').textContent=t.lang;
+  $('#projects-grid').innerHTML=projects.map(p=>`<article class="card ${p.cls}">
+      <div class="head"><div class="pl"><img src="${p.logo}" alt="" onerror="this.onerror=null;this.src='logo.png'"></div>
+        <div><h3>${lang==='en'?p.tEN:p.tAR}</h3>
+        <div class="chips"><span class="chip">${ico('smartphone')}${t.typeApp}</span><span class="chip">${p.v}</span></div></div></div>
+      <p>${lang==='en'?p.dEN:p.dAR}</p>
+      <div class="chips" style="margin:0">${p.tags.map(x=>`<span class="chip">${x}</span>`).join('')}</div>
+      <a class="btn" href="${p.url}" target="_blank" rel="noopener noreferrer">${GH}${t.projectViewCode}</a>
+    </article>`).join('');
+  requestAnimationFrame(layoutNav);
+}
+
+$('#lang').onclick=()=>{lang=lang==='en'?'ar':'en';store.set('mazen-lang',lang);render()};
+$('#theme').onclick=()=>{theme=theme==='dark'?'light':'dark';store.set('mazen-theme',theme);render()};
+$('#logo').onclick=e=>{const l=e.currentTarget;l.classList.remove('pop');void l.offsetWidth;l.classList.add('pop')};
+
+let sT;
+function snack(msg){const s=$('#snack');$('#snack-t').textContent=msg;s.classList.add('show');clearTimeout(sT);sT=setTimeout(()=>s.classList.remove('show'),2600)}
+$('#copy').onclick=()=>{
+  const done=()=>{snack(T[lang].contactCopySuccess);$('#copy-i').textContent='check';$('#copy-t').textContent=T[lang].contactCopiedBtn;
+    setTimeout(()=>{$('#copy-i').textContent='content_copy';$('#copy-t').textContent=T[lang].contactCopyBtn},2000)};
+  const email=$('#email').textContent.trim();
+  (navigator.clipboard?navigator.clipboard.writeText(email):Promise.reject()).then(done).catch(()=>{
+    const a=document.createElement('textarea');a.value=email;document.body.appendChild(a);a.select();
+    try{document.execCommand('copy');done()}catch(e){}a.remove()});
+};
+
+render();
+if(document.fonts)document.fonts.ready.then(layoutNav);
+addEventListener('resize',layoutNav);
+</script>
+</body>
+</html>
