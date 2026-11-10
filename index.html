@@ -61,7 +61,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--p);outline-offset:3
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 .btn{height:56px;padding:0 28px;border:0;border-radius:28px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;
   background:var(--p);color:var(--on-p);transition:border-radius .45s var(--spring),transform .45s var(--spring),background-color .2s}
-.btn.tonal{background:var(--sc);color:var(--on-sc)}
+.btn.tonal{background:var(--pc);color:var(--on-pc)}
 .btn:hover{border-radius:16px}
 .btn:active{transform:scale(.94);border-radius:12px}
 .btn[aria-disabled=true]{opacity:.5;cursor:not-allowed;background:var(--ch);color:var(--sv)}
@@ -73,12 +73,10 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--p);outline-offset:3
 .mz-d{display:none}[data-theme=dark] .mz-l{display:none}[data-theme=dark] .mz-d{display:block}
 .logo-shape .mz{position:relative;width:60%;height:60%;object-fit:contain}
 @keyframes spin{to{transform:rotate(360deg)}}
-.logo-shape:active{transform:scale(.9) rotate(-6deg)}
-.logo-shape.pop{animation:pop .8s var(--spring)}
-.logo-shape.nobg.pop{animation:morph 14s var(--eff) infinite,pop .8s var(--spring)}
+.logo-shape:active{transform:scale(.94)}
+.ripple{position:absolute;inset:0;border-radius:50%;border:4px solid var(--p);pointer-events:none}
 @keyframes morph{0%,100%{border-radius:50% 50% 50% 50%/50%}25%{border-radius:62% 38% 46% 54%/45% 58% 42% 55%}
   50%{border-radius:30% 70% 70% 30%/30% 30% 70% 70%}75%{border-radius:42% 58% 33% 67%/58% 40% 60% 42%}}
-@keyframes pop{0%{transform:scale(1)}30%{transform:scale(1.14) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
 .in{animation:rise .8s var(--spring-slow) both}
 @keyframes rise{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:none}}
 
@@ -103,7 +101,29 @@ h2{font-size:clamp(34px,6vw,60px);font-weight:900;font-variation-settings:'wdth'
 .chip{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 12px;border-radius:14px;font-size:12px;font-weight:700;background:color-mix(in srgb,var(--fg) 16%,transparent)}
 .chip .ic{width:14px;height:14px}
 .card p{opacity:.88;flex:1}
-.card .btn{background:var(--fg);color:var(--bg);width:100%}
+.actions{display:flex;gap:10px}
+.actions .btn{flex:1 1 0;min-width:0;padding:0 14px;gap:8px;white-space:nowrap;background:var(--fg);color:var(--bg)}
+.actions .btn.ghost{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 2px var(--fg)}
+
+/* Hero stats */
+.stats{display:flex;flex-wrap:wrap;gap:4px 0;margin-top:28px;font-weight:700;font-size:15px;color:var(--sv)}
+.stats span{white-space:nowrap}
+.stats span+span::before{content:"\00B7";margin-inline:10px;color:var(--p);font-weight:900}
+
+/* What's new on cards */
+.wn{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:20px;background:color-mix(in srgb,var(--fg) 12%,transparent)}
+.wn>.ic{margin-top:1px}
+.wn b{display:block;font-size:13px;font-weight:800;line-height:1.4}
+.wn .tx{font-size:14px;line-height:1.5;opacity:.9;margin-top:2px}
+
+/* Back to top */
+#top-btn{position:fixed;z-index:45;inset-inline-end:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:52px;height:52px;border:0;border-radius:26px;
+  display:grid;place-items:center;background:var(--pc);color:var(--on-pc);box-shadow:0 6px 20px rgba(0,30,45,.22);
+  opacity:0;visibility:hidden;transform:translateY(16px) scale(.8);
+  transition:opacity .2s linear,transform .45s var(--spring),border-radius .4s var(--spring),visibility 0s .2s}
+#top-btn.show{opacity:1;visibility:visible;transform:none;transition:opacity .2s linear,transform .45s var(--spring),border-radius .4s var(--spring),visibility 0s}
+#top-btn:hover{border-radius:16px}
+#top-btn:active{transform:scale(.9);border-radius:14px}
 
 /* Contact */
 .contact{background:var(--pc);color:var(--on-pc);border-radius:72px 28px 72px 28px;padding:clamp(28px,6vw,64px);display:grid;gap:24px;justify-items:start}
@@ -121,10 +141,10 @@ h2{font-size:clamp(34px,6vw,60px);font-weight:900;font-variation-settings:'wdth'
 footer{position:relative;margin-top:96px;background:var(--c);padding:56px 0 calc(120px + env(safe-area-inset-bottom,0px))}
 footer::before{content:"";position:absolute;left:0;right:0;top:-27px;height:28px;background:radial-gradient(circle at 28px 28px,var(--c) 27.5px,transparent 28.5px) 0 0/56px 28px repeat-x}
 .fbg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.fr{--w:clamp(190px,22vw,300px);position:absolute;inset-inline-end:calc(var(--w) * -.3);bottom:calc(var(--w) * -.58);width:var(--w);height:var(--w);object-fit:contain;animation:spin 28s linear infinite}
+.fr{--w:clamp(260px,32vw,440px);position:absolute;inset-inline-end:calc(var(--w) * -.3);bottom:calc(var(--w) * -.58);width:var(--w);height:var(--w);object-fit:contain;animation:spin 28s linear infinite}
 .foot{position:relative;display:flex;align-items:center;justify-content:flex-start;gap:20px;flex-wrap:wrap}
 .foot .round{background:var(--ch)}
-.foot .round:hover{background:var(--sc)}
+.foot .round:hover{background:var(--pc)}
 .foot b{font-size:34px;font-weight:900;font-variation-settings:'wdth' 125;display:block;line-height:1.1}
 .foot small{color:var(--sv);font-size:14px}
 
@@ -141,6 +161,7 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-27px;height:28px
   .contact{border-radius:48px 24px 48px 24px}.hero p{font-size:16px}.cta .btn{flex:1 1 auto}
   .brand{font-size:19px;padding:6px 14px}.round{height:44px;min-width:44px;padding:0 12px}footer{margin-top:72px}}
 @media(max-width:400px){.group .btn{padding:0 10px;font-size:14px}.group .ic{display:none}}
+@media(max-width:380px){.actions .ic{display:none}}
 @media(max-width:360px){.top{padding-inline:10px}.brand{font-size:17px}.ctrls{gap:6px}.btn{padding:0 20px}}
 @media(max-height:520px) and (orientation:landscape){.hero{padding-top:88px}.logo-shape{width:160px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
@@ -166,6 +187,7 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-27px;height:28px
         <a class="btn" href="#projects" data-t="ctaWork">See my work</a>
         <a class="btn tonal" href="#contact" data-t="ctaContact">Contact me</a>
       </div>
+      <div class="stats in" id="stats" style="animation-delay:.36s"></div>
     </div>
     <div class="logo-stage in" style="animation-delay:.08s">
       <div class="logo-shape" id="logo"><img class="spin spin-d" src="assets/roundd.png" alt="" onerror="bgFail(this)"><img class="spin spin-l" src="assets/roundl.png" alt="" onerror="bgFail(this)"><img class="mz mz-d" src="assets/logod.png" alt="Mazen logo" onerror="this.onerror=null;this.src='assets/logo.png'"><img class="mz mz-l" src="assets/logol.png" alt="Mazen logo" onerror="this.onerror=null;this.src='assets/logo.png'"></div>
@@ -200,33 +222,38 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-27px;height:28px
 </footer>
 
 <nav id="bn" aria-label="Sections"></nav>
+<button id="top-btn" type="button" aria-label="Back to top"><span class="ic">keyboard_arrow_up</span></button>
 <div id="snack" role="status"><span class="ic">check_circle</span><span id="snack-t"></span></div>
 
 <script>
 const T={
  en:{brandName:'MAZEN',navHome:'Home',navProjects:'Projects',navContact:'Contact',heroGreeting:'Hi, I am Mazen',heroRole:'Apps & Games Developer',
-  heroIntro:'I build smooth Android apps and fun games, with a focus on fast, polished Material 3 interfaces.',ctaWork:'See my work',ctaContact:'Contact me',
+  heroIntro:'I build smooth Android apps and fun games, with a focus on fast, polished Material 3 Expressive interfaces.',ctaWork:'See my work',ctaContact:'Contact me',
   projectsTitle:'Latest Works',contactTitle:'Contact me',contactSubtitle:'Have an app idea or a game concept? Send me an email.',
   contactCopyBtn:'Copy email',contactCopiedBtn:'Copied',contactGmailBtn:'Open in Gmail',contactCopySuccess:'Email copied to clipboard',
-  footerCopyright:'© 2026 Mazen.',projectViewCode:'GitHub repository',projectComingSoon:'Coming soon',typeApp:'App',typeGame:'Game',lang:'العربية'},
+  footerCopyright:'© 2026 Mazen.',projectViewCode:'GitHub',downloadApk:'Download APK',projectComingSoon:'Coming soon',typeApp:'App',typeGame:'Game',statApps:'apps',wnLabel:"What's new in",backTop:'Back to top',lang:'العربية'},
  ar:{brandName:'مازن',navHome:'الرئيسية',navProjects:'أعمالي',navContact:'اتصل بي',heroGreeting:'أهلاً، أنا مازن',heroRole:'مطور تطبيقات وألعاب',
   heroIntro:'أصنع تطبيقات أندرويد سلسة وألعاباً ممتعة، مع تركيز على واجهات Material 3 السريعة والأنيقة.',ctaWork:'شاهد أعمالي',ctaContact:'تواصل معي',
   projectsTitle:'أعمالي',contactTitle:'تواصل معي',contactSubtitle:'لديك فكرة تطبيق أو لعبة؟ راسلني عبر البريد الإلكتروني.',
   contactCopyBtn:'نسخ البريد',contactCopiedBtn:'تم النسخ',contactGmailBtn:'فتح جيميل',contactCopySuccess:'تم نسخ البريد الإلكتروني',
-  footerCopyright:'© 2026 مازن.',projectViewCode:'مستودع جيت هاب',projectComingSoon:'قريباً',typeApp:'تطبيق',typeGame:'لعبة',lang:'English'}
+  footerCopyright:'© 2026 مازن.',projectViewCode:'جيت هاب',downloadApk:'تحميل APK',projectComingSoon:'قريباً',typeApp:'تطبيق',typeGame:'لعبة',statApps:'تطبيقات',wnLabel:'الجديد في',backTop:'العودة للأعلى',lang:'English'}
 };
 const projects=[
  {cls:'tas',tEN:'Tasbeeh',tAR:'تسبيح',dEN:'Tasbeeh is your daily companion to help you remember Allah. It includes a smart digital rosary, morning and evening dhikr (reading or listening with a serene voice), and more, designed to help you focus without draining your battery.',
   dAR:'تطبيق تسبيح هو رفيقك اليومي الذي يساعدك على ذكر الله في أي وقت. ويضم السبحة الإلكترونية الذكية، وأذكار الصباح والمساء (قراءة أو استماع بصوت عذب)، ومزايا أخرى تساعدك على التركيز دون استهلاك بطارية جهازك.',
-  tags:['Android Studio','Kotlin','Material 3'],url:'https://github.com/Mazen-73/tasbeeh',v:'v8.2.0',logo:'assets/tasbeeh.png'},
+  wnEN:'Fixed back buttons across every screen for smoother navigation, plus 5 new religious facts, 4 new feelings (Broken, Lost, Falling short, Lonely) and 2 new backgrounds.',
+  wnAR:'صلحنا أزرار الرجوع في كل شاشات التطبيق عشان التنقل يكون أسهل، وأضفنا 5 معلومات دينية جديدة و4 مشاعر جديدة (مكسور - تائه - مقصر - وحيد) وخلفيتين جديدتين.',
+  tags:['Android Studio','Kotlin','Material 3 Expressive'],url:'https://github.com/Mazen-73/tasbeeh',v:'v8.2.0',logo:'assets/tasbeeh.png'},
  {cls:'cash',tEN:'Cashy',tAR:'كاشي',dEN:'Cashy helps you control your finances with ease. Track daily expenses and income accurately and get a clear financial overview in a modern Material 3 Expressive interface.',
   dAR:'تطبيق كاشي رفيقك اليومي للتحكم في أموالك بسهولة. تتبع مصاريفك ودخلك بدقة واحصل على رؤية مالية واضحة عبر واجهة Material 3 Expressive.',
-  tags:['Android Studio','Kotlin','SQLite'],url:'https://github.com/Mazen-73/cashy',v:'v6.0.0',logo:'assets/cashy.png'}
+  wnEN:'Spanish language support, editable transaction dates, a redesigned updates screen, smoother analytics, and refined light mode colors.',
+  wnAR:'دعم كامل للغة الإسبانية، وإمكانية تعديل تاريخ المعاملة، وإعادة تصميم شاشة التحديثات، وتحسين حركة شاشة التحليلات، وتحسين ألوان الوضع الفاتح.',
+  tags:['Android Studio','Kotlin','SQLite'],url:'https://github.com/Mazen-73/cashy',v:'v7.0.0',logo:'assets/cashy.png'}
 ];
 const GH=`<svg class="ic gh" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12.297c0-6.627-5.373-12-12-12"/></svg>`;
 const ico=n=>`<span class="ic">${n}</span>`;
 const store={get:(k,d)=>{try{return localStorage.getItem(k)??d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
-let lang=store.get('mazen-lang','en'),theme=store.get('mazen-theme','dark'),active='home',lock=false;
+let lang=store.get('mazen-lang','en'),theme=store.get('mazen-theme','dark'),active='home',target=null,lockT,idleT;
 let bgFails=0;window.bgFail=i=>{i.onerror=null;i.remove();if(++bgFails>=2)$('#logo').classList.add('nobg')};
 const root=document.documentElement,$=s=>document.querySelector(s);
 
@@ -236,7 +263,7 @@ const nav=$('#bn');
 tabs.forEach(([id,key,icon])=>{
   const b=document.createElement('button');b.className='tab';b.dataset.id=id;b.setAttribute('aria-label',id);
   b.innerHTML=`${ico(icon)}<span class="lb" data-t="${key}"></span>`;
-  b.onclick=()=>{setActive(id);lock=true;document.getElementById(id).scrollIntoView({behavior:'smooth'});setTimeout(()=>lock=false,900)};
+  b.onclick=()=>go(id);
   nav.appendChild(b);
 });
 function layoutNav(){
@@ -248,33 +275,60 @@ function layoutNav(){
 }
 function setActive(id){if(id===active)return;active=id;layoutNav()}
 function spy(){
-  if(lock)return;
-  let cur='home';const y=scrollY+innerHeight/3;
-  tabs.forEach(([id])=>{if(y>=document.getElementById(id).offsetTop)cur=id});
-  if(innerHeight+scrollY>=document.documentElement.scrollHeight-80)cur='contact';
+  let cur=tabs[0][0];const line=innerHeight*.4;
+  tabs.forEach(([id])=>{if(document.getElementById(id).getBoundingClientRect().top<=line)cur=id});
+  if(innerHeight+scrollY>=document.documentElement.scrollHeight-80)cur=tabs[tabs.length-1][0];
   setActive(cur);
 }
-addEventListener('scroll',spy,{passive:true});
+/* A tap targets one section; the scroll spy stays quiet until scrolling stops, the user takes over, or a failsafe fires */
+function release(){target=null;clearTimeout(idleT);clearTimeout(lockT);spy()}
+function armIdle(ms){clearTimeout(idleT);idleT=setTimeout(release,ms)}
+function go(id){
+  target=id;setActive(id);armIdle(350);
+  clearTimeout(lockT);lockT=setTimeout(release,2500);
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+addEventListener('scroll',()=>{if(target)armIdle(140);else spy()},{passive:true});
+['wheel','touchmove','keydown'].forEach(ev=>addEventListener(ev,()=>{if(target){target=null;clearTimeout(idleT);clearTimeout(lockT)}},{passive:true}));
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href').slice(1);
+  if(tabs.some(t=>t[0]===id)){e.preventDefault();go(id)}});
+addEventListener('resize',()=>{layoutNav();if(!target)spy()});
+addEventListener('load',()=>{layoutNav();spy()});
 
 function render(){
   const t=T[lang];
   root.lang=lang;root.dir=lang==='ar'?'rtl':'ltr';root.dataset.theme=theme;
   document.querySelectorAll('[data-t]').forEach(e=>{if(t[e.dataset.t]!=null)e.textContent=t[e.dataset.t]});
   $('#lang').textContent=t.lang;
+  const n=projects.length,appsWord=lang==='ar'&&n===2?'تطبيقان':t.statApps;
+  $('#stats').innerHTML=[`${n} ${appsWord}`,'Kotlin','Material 3 Expressive'].map(x=>`<span>${x}</span>`).join('');
+  $('#top-btn').setAttribute('aria-label',t.backTop);
   $('#projects-grid').innerHTML=projects.map(p=>`<article class="card ${p.cls}">
       <div class="head"><div class="pl"><img src="${p.logo}" alt="" onerror="this.onerror=null;this.src='logo.png'"></div>
         <div><h3>${lang==='en'?p.tEN:p.tAR}</h3>
         <div class="chips"><span class="chip">${ico('smartphone')}${t.typeApp}</span><span class="chip">${p.v}</span></div></div></div>
       <p>${lang==='en'?p.dEN:p.dAR}</p>
+      <div class="wn">${ico('new_releases')}<div><b>${t.wnLabel} <bdi>${p.v}</bdi></b><div class="tx">${lang==='en'?p.wnEN:p.wnAR}</div></div></div>
       <div class="chips" style="margin:0">${p.tags.map(x=>`<span class="chip">${x}</span>`).join('')}</div>
-      <a class="btn" href="${p.url}" target="_blank" rel="noopener noreferrer">${GH}${t.projectViewCode}</a>
+      <div class="actions">
+        <a class="btn" href="${p.url}/releases/latest/download/${p.tEN}.apk" rel="noopener" download="${p.tEN}.apk">${ico('download')}${t.downloadApk}</a>
+        <a class="btn ghost" href="${p.url}" target="_blank" rel="noopener noreferrer">${GH}${t.projectViewCode}</a>
+      </div>
     </article>`).join('');
-  requestAnimationFrame(layoutNav);
+  requestAnimationFrame(layoutNav);if(document.fonts)document.fonts.ready.then(layoutNav);
 }
 
+const topBtn=$('#top-btn');
+addEventListener('scroll',()=>topBtn.classList.toggle('show',scrollY>innerHeight*.6),{passive:true});
+topBtn.onclick=()=>go('home');
 $('#lang').onclick=()=>{lang=lang==='en'?'ar':'en';store.set('mazen-lang',lang);render()};
 $('#theme').onclick=()=>{theme=theme==='dark'?'light':'dark';store.set('mazen-theme',theme);render()};
-$('#logo').onclick=e=>{const l=e.currentTarget;l.classList.remove('pop');void l.offsetWidth;l.classList.add('pop')};
+$('#logo').onclick=e=>{
+  const l=e.currentTarget;
+  l.querySelectorAll('.mz').forEach(m=>m.animate([{transform:'scale(1,1)'},{transform:'scale(1.3,.7)',offset:.18},{transform:'scale(.82,1.2)',offset:.4},{transform:'scale(1.1,.94)',offset:.62},{transform:'scale(1,1)'}],{duration:750,easing:'ease-out'}));
+  [0,170].forEach(d=>setTimeout(()=>{const r=document.createElement('span');r.className='ripple';l.appendChild(r);
+    r.animate([{transform:'scale(.55)',opacity:.55},{transform:'scale(1.35)',opacity:0}],{duration:900,easing:'cubic-bezier(.2,0,0,1)'}).onfinish=()=>r.remove()},d));
+};
 
 let sT;
 function snack(msg){const s=$('#snack');$('#snack-t').textContent=msg;s.classList.add('show');clearTimeout(sT);sT=setTimeout(()=>s.classList.remove('show'),2600)}
